@@ -3,199 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .login-container {
-            background-color: white;
-            padding: 35px 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header h1 {
-            color: #007bff;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .input-field {
-            position: relative;
-        }
-
-        .input-field input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #ccc;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: border-color 0.3s, transform 0.2s;
-        }
-
-        .input-field input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        .input-field.shake input {
-            border-color: #dc3545;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .shake {
-            animation: shake 0.4s ease-in-out;
-        }
-
-        .input-field label {
-            position: absolute;
-            left: 15px;
-            top: -10px;
-            background: white;
-            padding: 0 5px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .login-btn {
-            width: 100%;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .login-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: #dc3545;
-            text-align: center;
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: rgba(220, 53, 69, 0.1);
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-    </style>
+    <title>Ban Manager Premium</title>
+    <link rel="stylesheet" href="/src/styles.css">
+    <link rel="icon" type="image/x-icon" href="/Resources/SpectrumClient.ico">
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>Login</h1>
-            <p>Enter your credentials to continue</p>
+    <nav class="navbar">
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-target="addAccount">Add Account</button>
+            <button class="nav-btn" data-target="manageAccounts">Manage Accounts</button>
+            <button class="nav-btn" data-target="banOptions">Ban Options</button>
+            <button class="nav-btn" data-target="unbanAccounts">Unbanned Accounts</button>
+            <button class="nav-btn" data-target="accountManager">Account Manager</button>
         </div>
-        <form id="loginForm" onsubmit="handleLogin(event)">
+    </nav>
+
+    <div class="main-container" role="main">
+        <!-- Add Account Section -->
+        <div id="addAccountSection" class="content-section">
+            <h2>Add New Account</h2>
             <div class="input-group">
-                <div class="input-field">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" required autocomplete="off">
-                </div>
-                <div class="input-field">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required autocomplete="off">
-                </div>
-                <div class="input-field">
-                    <label for="token">Unique Token</label>
-                    <input type="text" id="token" required autocomplete="off">
-                </div>
+                <input type="text" id="newAccountName" placeholder="Enter account name">
+                <button id="addAccountBtn" class="action-btn">Add Account</button>
             </div>
-            <button type="submit" class="login-btn">Login</button>
-            <div id="errorMessage" class="error-message">Invalid credentials. Please try again.</div>
-        </form>
+        </div>
+
+        <!-- Manage Accounts Section -->
+        <div id="manageAccountsSection" class="content-section hidden">
+            <h2>Manage Accounts</h2>
+            <div id="accountButtons" class="account-buttons">
+            </div>
+        </div>
+
+        <!-- Ban Options Section -->
+        <div id="banOptionsSection" class="content-section hidden">
+            <h2>Ban Options</h2>
+            <div class="account-selection">
+                <div class="selected-account-display">
+                    Selected Account: <span id="selectedAccountDisplay">None</span>
+                </div>
+                <select id="accountSelect">
+                    <option value="">Select an account</option>
+                </select>
+            </div>
+            <div class="ban-buttons">
+                <button id="cubecraftBtn" class="ban-btn">Cubecraft Ban (30 days)</button>
+                <button id="hiveBtn" class="ban-btn">Hive Ban (7 days)</button>
+                <button id="lifeboatBtn" class="ban-btn">Lifeboat Ban (30 days)</button>
+                <button id="customBanBtn" class="ban-btn">Custom Ban</button>
+            </div>
+            <div id="banStatus" class="timer">
+                Select an account to view ban status.
+            </div>
+        </div>
+
+        <!-- Unbanned Accounts Section -->
+        <div id="unbanAccountsSection" class="content-section hidden">
+            <h2>Unbanned Accounts</h2>
+            <div class="server-selection">
+                Select a server to view unbanned accounts
+                <select id="serverSelect">
+                    <option value="">Select a server</option>
+                    <option value="Cubecraft">Cubecraft</option>
+                    <option value="Hive">Hive</option>
+                    <option value="Lifeboat">Lifeboat</option>
+                </select>
+            </div>
+            <div id="unbanList" class="unban-list">
+                Select a server to view unbanned accounts.
+            </div>
+        </div>
+
+        <!-- Account Manager Section -->
+        <div id="accountManagerSection" class="content-section hidden">
+            <h2>Account Manager</h2>
+            <div class="input-group">
+                <input type="text" id="serviceName" placeholder="Enter service name (e.g., Netflix, Steam)">
+                <input type="text" id="username" placeholder="Enter username/email">
+                <input type="password" id="password" placeholder="Enter password">
+                <input type="text" id="notes" placeholder="Additional notes (optional)">
+                <button id="addCredentialBtn" class="action-btn">Add Credentials</button>
+            </div>
+            <div id="savedCredentials" class="credentials-list">
+                <!-- Credentials will be displayed here -->
+            </div>
+        </div>
     </div>
 
-    <script>
-        (function() {
-            // Store hashed credentials
-            const hashedCredentials = {
-                username: '03f85b1b2fa92f565476f39436ad6a8e2c891e9fef041265a79dabc39013e8c8',
-                password: 'af6c38ed1bcc3fb4cf6b111d73d9bdfc8a19a68b85c793b5f1545a3e1b18e1f2',
-                token: '0582ff3da09fbdd60e8ee6f51eb90f45'
-            };
+    <!-- Custom Ban Modal -->
+    <div id="customBanModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h3>Custom Ban</h3>
+            <div class="input-group">
+                <input type="text" id="customBanName" placeholder="Enter ban name">
+                <input type="number" id="customBanDuration" placeholder="Enter duration (days)">
+                <button id="startCustomBanBtn" class="action-btn">Start Custom Ban</button>
+            </div>
+        </div>
+    </div>
 
-            window.handleLogin = function(event) {
-                event.preventDefault();
-                
-                const inputFields = document.querySelectorAll('.input-field');
-                const errorMessage = document.getElementById('errorMessage');
+    <!-- Credential Edit Modal -->
+    <div id="credentialModal" class="modal">
+        <div class="modal-content">
+            <span id="closeCredentialModal" class="close">&times;</span>
+            <h3>Edit Credentials</h3>
+            <div class="input-group">
+                <input type="text" id="editServiceName" placeholder="Service name">
+                <input type="text" id="editUsername" placeholder="Username/email">
+                <input type="password" id="editPassword" placeholder="Password">
+                <input type="text" id="editNotes" placeholder="Additional notes">
+                <button id="updateCredentialBtn" class="action-btn">Update Credentials</button>
+            </div>
+        </div>
+    </div>
 
-                // Hash the input values
-                const hashedUsername = CryptoJS.SHA256(document.getElementById('username').value).toString();
-                const hashedPassword = CryptoJS.SHA256(document.getElementById('password').value).toString();
-                const hashedToken = CryptoJS.MD5(document.getElementById('token').value).toString();
+    <div class="watermark">
+        <img src="/Resources/SpectrumClient.ico" alt="Watermark Logo">
+    </div>
 
-                // Verify credentials
-                if (hashedUsername === hashedCredentials.username && 
-                    hashedPassword === hashedCredentials.password && 
-                    hashedToken === hashedCredentials.token) {
-                    window.location.href = "index.html";
-                } else {
-                    errorMessage.style.display = 'block';
-                    
-                    inputFields.forEach(field => {
-                        field.classList.add('shake');
-                        setTimeout(() => field.classList.remove('shake'), 400);
-                    });
-
-                    document.getElementById('password').value = '';
-                    document.getElementById('token').value = '';
-                }
-            };
-
-            // Hide error message when user starts typing
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('input', () => {
-                    document.getElementById('errorMessage').style.display = 'none';
-                });
-            });
-        })();
-    </script>
+    <script src="/src/index.js"></script>
 </body>
 </html>
