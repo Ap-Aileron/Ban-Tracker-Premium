@@ -537,6 +537,35 @@ customBanDuration.addEventListener('keypress', (e) => {
     }
 });
 
+// Check login status immediately and on page load
+function checkLogin() {
+    if (!sessionStorage.getItem('loggedIn')) {
+        window.location.href = 'index.html';
+    }
+}
+
+function toggleDropdown() {
+    document.getElementById('accountDropdown').classList.toggle('show');
+}
+
+function signOut() {
+    sessionStorage.removeItem('loggedIn');
+    window.location.href = 'index.html';
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(e) {
+    if (!e.target.matches('.account-btn')) {
+        var dropdown = document.getElementById('accountDropdown');
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+}
+
+// Check login on page load
+checkLogin();
+
 // Initialize
 loadAccounts();
 renderAccountButtons();
