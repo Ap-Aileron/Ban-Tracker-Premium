@@ -502,20 +502,27 @@ navButtons.forEach(btn => {
         );
 
         const target = btn.getAttribute('data-target');
-        if (target === 'addAccount') {
-            addAccountSection.classList.remove('hidden');
-        } else if (target === 'manageAccounts') {
-            manageAccountsSection.classList.remove('hidden');
-        } else if (target === 'banOptions') {
-            banOptionsSection.classList.remove('hidden');
-        } else if (target === 'unbanAccounts') {
-            unbanAccountsSection.classList.remove('hidden');
-            updateUnbanList();
-        }  else if (target === 'accountManager') {
-            accountManagerSection.classList.remove('hidden');
-            renderCredentials();
+        switch (target) {
+            case 'addAccount':
+                addAccountSection.classList.remove('hidden');
+                break;
+            case 'manageAccounts':
+                manageAccountsSection.classList.remove('hidden');
+                break;
+            case 'banOptions':
+                banOptionsSection.classList.remove('hidden');
+                break;
+            case 'unbanAccounts':
+                unbanAccountsSection.classList.remove('hidden');
+                updateUnbanList();
+                break;
+            case 'accountManager':
+                accountManagerSection.classList.remove('hidden');
+                renderCredentials();
+                break;
+            default:
+                console.error(`Unknown target: ${target}`);
         }
-        
     });
 });
 
@@ -540,7 +547,7 @@ customBanDuration.addEventListener('keypress', (e) => {
 // Check login status immediately and on page load
 function checkLogin() {
     if (!sessionStorage.getItem('loggedIn')) {
-        window.location.href = 'index.html';
+        window.location.href = '/login/login.html';
     }
 }
 
@@ -550,7 +557,7 @@ function toggleDropdown() {
 
 function signOut() {
     sessionStorage.removeItem('loggedIn');
-    window.location.href = 'index.html';
+    window.location.href = '/login/login.html';
 }
 
 // Close dropdown when clicking outside
