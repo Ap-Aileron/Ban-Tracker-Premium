@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 35px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-field {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            margin-top: 30px;
+        }
+
+        .hash-result {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .hash-result h3 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .hash-value {
+            word-break: break-all;
+            font-family: monospace;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .copy-btn {
+            background-color: #28a745;
+            padding: 8px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+
+        .copy-notice {
+            color: #28a745;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hash Generator</h1>
+        <div class="input-group">
+            <div class="input-field">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+            <div class="input-field">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            <div class="input-field">
+                <label for="token">Token:</label>
+                <input type="text" id="token" placeholder="Enter token">
+            </div>
+            <button onclick="generateHashes()">Generate Hashes</button>
+        </div>
+        <div class="output" id="output" style="display: none;">
+            <div class="hash-result">
+                <h3>Username Hash (SHA-256):</h3>
+                <div class="hash-value" id="usernameHash"></div>
+                <button class="copy-btn" onclick="copyToClipboard('usernameHash')">Copy</button>
+                <div class="copy-notice" id="usernameCopyNotice">Copied!</div>
+            </div>
+            <div class="hash-result">
+                <h3>Password Hash (SHA-256):</h3>
+                <div class="hash-value" id="passwordHash"></div>
+                <button class="copy-btn" onclick="copyToClipboard('passwordHash')">Copy</button>
+                <div class="copy-notice" id="passwordCopyNotice">Copied!</div>
+            </div>
+            <div class="hash-result">
+                <h3>Token Hash (MD5):</h3>
+                <div class="hash-value" id="tokenHash"></div>
+                <button class="copy-btn" onclick="copyToClipboard('tokenHash')">Copy</button>
+                <div class="copy-notice" id="tokenCopyNotice">Copied!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateHashes() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const token = document.getElementById('token').value;
+
+            if (!username || !password || !token) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const usernameHash = CryptoJS.SHA256(username).toString();
+            const passwordHash = CryptoJS.SHA256(password).toString();
+            const tokenHash = CryptoJS.MD5(token).toString();
+
+            document.getElementById('usernameHash').textContent = usernameHash;
+            document.getElementById('passwordHash').textContent = passwordHash;
+            document.getElementById('tokenHash').textContent = tokenHash;
+            document.getElementById('output').style.display = 'block';
+        }
+
+        function copyToClipboard(elementId) {
+            const hashText = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(hashText);
+            
+            const noticeId = elementId + 'CopyNotice';
+            const notice = document.getElementById(noticeId);
+            notice.style.display = 'block';
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
