@@ -20,16 +20,33 @@
         },
     ];
 
+    // Check for saved credentials on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedCredentials = localStorage.getItem('savedCredentials');
+        if (savedCredentials) {
+            const { username, password, token } = JSON.parse(savedCredentials);
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            document.getElementById('token').value = token;
+            document.getElementById('rememberMe').checked = true;
+        }
+    });
+
     window.handleLogin = function(event) {
         event.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const token = document.getElementById('token').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
         
         const inputFields = document.querySelectorAll('.input-field');
         const errorMessage = document.getElementById('errorMessage');
 
         // Hash the input values
-        const hashedUsername = CryptoJS.SHA256(document.getElementById('username').value).toString();
-        const hashedPassword = CryptoJS.SHA256(document.getElementById('password').value).toString();
-        const hashedToken = CryptoJS.MD5(document.getElementById('token').value).toString();
+        const hashedUsername = CryptoJS.SHA256(username).toString();
+        const hashedPassword = CryptoJS.SHA256(password).toString();
+        const hashedToken = CryptoJS.MD5(token).toString();
 
         // Check against all valid credentials
         const isValidCredentials = validCredentials.some(cred => 
@@ -39,6 +56,17 @@
         );
 
         if (isValidCredentials) {
+            // Handle remember me functionality
+            if (rememberMe) {
+                localStorage.setItem('savedCredentials', JSON.stringify({
+                    username,
+                    password,
+                    token
+                }));
+            } else {
+                localStorage.removeItem('savedCredentials');
+            }
+
             sessionStorage.setItem('loggedIn', 'true');
             window.location.href = "home.html";
         } else {

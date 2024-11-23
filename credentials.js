@@ -101,7 +101,7 @@ updateCredentialBtn.addEventListener('click', () => {
     }));
 
     if (!fields[0].value || !fields[1].value || !fields[2].value) {
-        alert('Please fill all required fields.');
+        alert('Please fill all required fields before entering');
         return;
     }
 

@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    
+    <!-- Include CryptoJS for hashing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
+    <!-- Include your CSS file -->
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
@@ -13,26 +17,42 @@
             <h1>Login</h1>
             <p>Enter your credentials to continue</p>
         </div>
-        <form id="loginForm" onsubmit="handleLogin(event)">
+
+        <form onsubmit="handleLogin(event)">
             <div class="input-group">
                 <div class="input-field">
                     <label for="username">Username</label>
-                    <input type="text" id="username" required autocomplete="off">
+                    <input type="text" id="username" required>
                 </div>
+
                 <div class="input-field">
                     <label for="password">Password</label>
-                    <input type="password" id="password" required autocomplete="off">
+                    <input type="password" id="password" required>
                 </div>
+
                 <div class="input-field">
                     <label for="token">Unique Token</label>
-                    <input type="text" id="token" required autocomplete="off">
+                    <input type="text" id="token" required>
+                </div>
+
+                <div class="remember-me">
+                    <label class="checkbox-container">
+                        Remember me
+                        <input type="checkbox" id="rememberMe">
+                        <span class="checkmark"></span>
+                    </label>
                 </div>
             </div>
+
             <button type="submit" class="login-btn">Login</button>
-            <div id="errorMessage" class="error-message">Invalid credentials. Please try again.</div>
         </form>
+
+        <div id="errorMessage" class="error-message">
+            Invalid credentials. Please try again.
+        </div>
     </div>
 
+    <!-- Include your JavaScript file -->
     <script src="login.js"></script>
 </body>
 </html>

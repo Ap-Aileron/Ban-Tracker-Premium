@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - Spectrum Client</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Dark Mode Colors */
+        .dark-mode {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --accent-primary: #3498db;
+            --accent-secondary: #2980b9;
+            --border-color: #404040;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+            --error-color: #e74c3c;
+        }
+
+        /* Light Mode Colors (Default) */
+        :root {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --accent-primary: #007bff;
+            --accent-secondary: #0056b3;
+            --border-color: #cccccc;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+        }
+
+        /* Settings Specific Styles */
+        .settings-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--bg-secondary);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-group {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--bg-primary);
+        }
+
+        .settings-group h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .setting-label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Select Dropdown */
+        select {
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Buttons */
+        .settings-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            transition: bottom 0.3s;
+        }
+
+        .notification.show {
+            bottom: 20px;
+        }
+
+        /* Font Sizes */
+        .font-size-small {
+            font-size: 14px;
+        }
+
+        .font-size-medium {
+            font-size: 16px;
+        }
+
+        .font-size-large {
+            font-size: 18px;
+        }
+
+        /* No Animations */
+        .no-animations * {
+            transition: none !important;
+            animation: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="window.location.href='home.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <h2>Account Settings</h2>
+        
+        <div class="settings-group">
+            <h3>Appearance</h3>
+            <div class="setting-item">
+                <span class="setting-label">Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Font Size</span>
+                <select id="fontSizeSelect">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <h3>Performance</h3>
+            <div class="setting-item">
+                <span class="setting-label">Enable Animations</span>
+                <label class="switch">
+                    <input type="checkbox" id="animationsToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-buttons">
+            <button id="resetSettingsBtn" class="btn btn-secondary">Reset to Default</button>
+            <button id="saveSettingsBtn" class="btn btn-primary">Save Changes</button>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="account-settings.js"></script>
+</body>
+</html>
